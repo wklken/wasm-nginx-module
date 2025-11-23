@@ -24,7 +24,7 @@ location /t {
     content_by_lua_block {
         local wasm = require("resty.proxy-wasm")
         local plugin = assert(wasm.load("fault_injection",
-            "t/testdata/rust/http-call/target/wasm32-wasi/debug/http_call.wasm"))
+            "t/testdata/rust/http-call/target/wasm32-wasip1/debug/http_call.wasm"))
         local ctx = assert(wasm.on_configure(plugin, '{}'))
         assert(wasm.on_http_request_headers(ctx))
     }

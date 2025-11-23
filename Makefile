@@ -38,7 +38,7 @@ build.assemblyscript.testdata:
 build.rust.testdata:
 	$(foreach DIR, $(RUST_DIR), \
 		cd $(DIR) && \
-		cargo build --target=wasm32-wasi && \
+		cargo build --target=wasm32-wasip1 && \
 		cd ../../../..; \
 	)
 

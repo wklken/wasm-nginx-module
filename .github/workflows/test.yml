@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, fix_* ]
   pull_request:
     branches: [ main ]
 
@@ -14,42 +14,40 @@ jobs:
         vm:
           - wasmedge
           - wasmtime
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       OPENRESTY_PREFIX: "/usr/local/openresty"
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3.4.0
+        uses: actions/checkout@v5
 
       - name: Set up Clang
         uses: egor-tensin/setup-clang@v1
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3.6.0
+        uses: actions/setup-node@v6
         with:
-          node-version: 10.0.0
+          node-version: 22.14.0
 
       - name: Set up Golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v6
         with:
-          go-version: "1.17.5"
+          go-version: "1.21.0"
 
       - name: Install rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-          target: wasm32-wasi
-          default: true
-          override: true
+          target: wasm32-wasip1
 
       - name: Get dependencies
         run: |
           sudo apt install -y cpanminus build-essential libncurses5-dev libreadline-dev libssl-dev perl luarocks libubsan0
           sudo luarocks install lua-resty-http > build.log 2>&1 || (cat build.log && exit 1)
 
-          wget https://github.com/tinygo-org/tinygo/releases/download/v0.22.0/tinygo_0.22.0_amd64.deb
-          sudo dpkg -i tinygo_0.22.0_amd64.deb
+          wget https://github.com/tinygo-org/tinygo/releases/download/v0.30.0/tinygo_0.30.0_amd64.deb
+          sudo dpkg -i tinygo_0.30.0_amd64.deb
 
       - name: Before install
         run: |
